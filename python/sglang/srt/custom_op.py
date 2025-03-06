@@ -37,4 +37,4 @@ class CustomOp(nn.Module):
         elif _is_rocm:
             return self.forward_hip
         else:
-            return self.forward_native
+            return self.forward_cpu
