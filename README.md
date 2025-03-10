@@ -69,6 +69,7 @@ We learned the design and reused code from the following projects: [Guidance](ht
 
 
 ## Run for XPU
+```bash
 git clone https://github.com/jilongW/sglang.git
 git clone https://github.com/jilongW/vllm.git
 cd sglang
@@ -115,3 +116,4 @@ pip install triton-xpu==3.2.0b1
 
 
 python3 -m sglang.bench_one_batch --batch-size 1 --input 32 --output 32 --model /home/data/jlwang/sglang/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --trust-remote-code --device xpu
+```
