@@ -66,3 +66,52 @@ For enterprises interested in adopting or deploying SGLang at scale, including t
 
 ## Acknowledgment and Citation
 We learned the design and reused code from the following projects: [Guidance](https://github.com/guidance-ai/guidance), [vLLM](https://github.com/vllm-project/vllm), [LightLLM](https://github.com/ModelTC/lightllm), [FlashInfer](https://github.com/flashinfer-ai/flashinfer), [Outlines](https://github.com/outlines-dev/outlines), and [LMQL](https://github.com/eth-sri/lmql). Please cite the paper, [SGLang: Efficient Execution of Structured Language Model Programs](https://arxiv.org/abs/2312.07104), if you find the project useful.
+
+
+## Run for XPU
+git clone https://github.com/jilongW/sglang.git
+git clone https://github.com/jilongW/vllm.git
+cd sglang
+git checkout for_xpu
+cd ..
+pip install torch==2.6.0 torchvision torchaudio triton --index-url https://download.pytorch.org/whl/test/xpu
+wget https://ubit-artifactory-ba.intel.com/artifactory/aipc_releases-ba-local/gpu/new/validation/IPEX/weekly/PVC/2025/ww03_Stock_test/py310/oneccl_bind_pt-2.5.0+xpu-cp310-cp310-linux_x86_64.whl
+wget https://ubit-artifactory-ba.intel.com/artifactory/aipc_releases-ba-local/gpu/new/validation/IPEX/weekly/PVC/2025/ww03_Stock_test/py310/intel_extension_for_pytorch-2.6.10+gitc2aa76f-cp310-cp310-linux_x86_64.whl
+pip install intel_extension_for_pytorch-2.6.10+gitc2aa76f-cp310-cp310-linux_x86_64.whl oneccl_bind_pt-2.5.0+xpu-cp310-cp310-linux_x86_64.whl
+wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/e7705a6d-954d-465c-a5bc-4f820e2e4e90/intel-deep-learning-essentials-2025.0.2.9_offline.sh
+sudo sh ./intel-deep-learning-essentials-2025.0.2.9_offline.sh -a --ignore-errors --install-dir ~/oneapi --silent --eula accept
+source ~/oneapi/setvars.sh
+cd vllm
+pip install setuptools_scm
+pip install setuptools==75.6.0 packaging==24.2
+pip install ninja==1.11.1.3
+pip install jinja2==3.1.5
+
+VLLM_TARGET_DEVICE=xpu python setup.py install
+
+Ignore the issue caused by ninja or pip
+
+cd ..
+
+cd sglang
+pip install -e "python[all_xpu]" 
+cd ..
+
+pip install msgspec
+
+pip install blake3
+
+pip install py-cpuinfo
+
+pip install compressed_tensors
+
+pip install gguf
+
+conda install libsqlite=3.48.0
+
+pip install partial_json_parser
+pip uninstall triton triton-xpu
+pip install triton-xpu==3.2.0b1
+
+
+python3 -m sglang.bench_one_batch --batch-size 1 --input 32 --output 32 --model /home/data/jlwang/sglang/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --trust-remote-code --device xpu
