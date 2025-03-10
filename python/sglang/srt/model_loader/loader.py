@@ -19,6 +19,9 @@ import numpy as np
 import torch
 from huggingface_hub import HfApi, hf_hub_download
 from torch import nn
+# import ipex_llm
+# from ipex_llm.transformers import AutoModelForCausalLM
+# from transformers import PretrainedConfig
 from transformers import AutoModelForCausalLM, PretrainedConfig
 from transformers.utils import SAFE_WEIGHTS_INDEX_NAME
 
